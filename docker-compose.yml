@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    image: php:7.2-apache
+    build: ./php
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./src:/var/www/html
+      - ./log/apache2:/var/log/apache2
