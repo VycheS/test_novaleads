@@ -6,10 +6,9 @@ class App
         echo "start App";
     }
 
-    public function start()
+    public function start($url)
     {
-        $string = file_get_contents('https://www.marathonbet.ru/su/events.htm?id=11');
-        echo Parse($string, '<div class="columns clearfix">', '</div>');
-        echo '<br>' . Parse($string, '<title>', '</title>');
+        $html = file_get_contents($url);
+        echo '<br>'. parse($html, '<div class="bg coupon-row"', '</div>');
     }
 }
