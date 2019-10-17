@@ -1,6 +1,12 @@
 <?php
 
 define("DEBUG", 1);
+if(DEBUG == 1){
+    error_reporting(E_ALL);
+} else {
+    error_reporting(0);
+}
+
 define("ROOT", dirname(__DIR__));
 define("WWW", ROOT . '/public');
 define("APP", ROOT . '/app');
