@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     image: php:7.2-apache
-    build: ./php
+    build: ./dockerfiles/php
     ports:
       - 80:80
       - 443:443
