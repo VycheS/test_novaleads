@@ -1,6 +1,6 @@
 <?php
 namespace app;
-use libs\functions\file_get_contents_curl;
+
 class App
 {
     private $matches;
