@@ -11,13 +11,13 @@ class App
     {
         $page  = '&page=';
         $action = '&pageAction=getPage';
-        $html = file_get_contents($domainName . $route . $params . $page . 0 . $action);
+        $html = file_get_contents_curl($domainName . $route . $params . $page . 0 . $action);
         $resultAll = parse($html, 'bg coupon-row\"', '<table class=', true, true);
         //debug($resultAll);
         
         for ($i = 1; $i <= 3; $i++) {
             $query = $page . $i . $action;
-            $html .= file_get_contents($domainName . $route . $params . $query);
+            $html .= file_get_contents_curl($domainName . $route . $params . $query);
             $resultOne = parse($html, 'bg coupon-row\"', '<table class=', true, true);
             $resultAll += $resultOne;
         }
