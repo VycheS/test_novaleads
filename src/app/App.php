@@ -1,4 +1,6 @@
 <?php
+namespace app;
+use libs\functions\file_get_contents_curl;
 class App
 {
     private $matches;
@@ -30,5 +32,10 @@ class App
             $this->matches[$key] = $domainName . '/su/betting/' . $var;
         }
         debug($this->matches);
+    }
+
+    private function query()
+    {
+        
     }
 }

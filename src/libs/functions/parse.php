@@ -1,4 +1,5 @@
 <?php
+
 function parse(string &$text, string $first, string $last, bool $addFirstAndLast = false, bool $findAll = false)
 {
     $pos = strpos($text, $first);

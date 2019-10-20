@@ -1,10 +1,8 @@
 <?php
-require_once dirname(__DIR__) . '/config/init.php';
+require_once '../vendor/autoload.php';
+// require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-require_once LIBS . '/functions/parse.php';
-require_once LIBS . '/functions/debug.php';
-require_once LIBS . '/functions/file_get_contents_curl.php';
-require_once APP . '/App.php';
+use app\App;
 
 $domainName = 'https://www.marathonbet.ru';
 $route = '/su/events.htm';
