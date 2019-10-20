@@ -4,10 +4,10 @@
       "app\\": "app"
     },
     "files": [
-        "config/init.php",
-        "libs/functions/debug.php",
-        "libs/functions/file_get_contents_curl.php",
-        "libs/functions/parse.php"
+      "config/init.php",
+      "libs/functions/debug.php",
+      "libs/functions/file_get_contents_curl.php",
+      "libs/functions/parse.php"
     ]
   },
   "require": {}

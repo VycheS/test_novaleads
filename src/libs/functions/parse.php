@@ -13,7 +13,12 @@ function parse(string &$text, string $first, string $last, bool $addFirstAndLast
             $lastLen = 0;
         }
         $subText = substr($text, $pos + $firstPos);
-        $resultOne = substr($subText, 0, strpos($subText, $last) + $lastLen);
+        // это условие чтобы можно было задать срез парсинга только по первому
+        if ($last == '') {
+            $resultOne = $subText;
+        } else {
+            $resultOne = substr($subText, 0, strpos($subText, $last) + $lastLen);
+        }
 
         if ($findAll == true) { // найти все элементы?
             $subText = substr($subText, strlen($resultOne));// обрезаем найденное
