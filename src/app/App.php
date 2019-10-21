@@ -38,30 +38,37 @@ class App
             $this->matches[] = array($key, $domainName . '/su/betting/' . $var);
         }
         //debug($this->matches);
-        
+
         $this->put_query($this->matches[0][1], dirname(__DIR__) . '/tmp/cookies.txt');
     }
 
-   
+
     private function put_query($url, $cookiefile, $data = null)
     {
         echo $url;
 
-        //$data_json = '[{"eventId":8654186,"menuLinkId":"10"}]';
-        $data = array(
-            'eventID' => 8654186,
-            'menuLinkId' => '10'
-        );
+        $data_json = '[{"eventID":8654186,"menuLinkId":"10"}]';
 
-        $data_json = json_encode($data);
+        // $data = array([
+        //     'eventID' => '8654186',
+        //     'menuLinkId' => '10'
+        // ]);
 
-        $headers = array(
-            'Accept: application/json',
+        // $data_json = json_encode($data);
+
+        $headers = [
+            'Accept: application/json, text/javascript, */*; q=0.01',
             'Accept-Encoding: gzip, deflate, br',
-            'Content-Type: application/json, text/javascript, */*; q=0.01',
+            'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Content-Type: application/json',
             'Content-Length: ' . strlen($data_json),
+            'Host: www.marathonbet.ru',
+            'Origin: https://www.marathonbet.ru',
+            'Sec-Fetch-Mode: cors',
+            'Sec-Fetch-Site: same-origin',
             'X-Requested-With: XMLHttpRequest'
-        );
+
+        ];
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -78,21 +85,21 @@ class App
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
 
         curl_setopt($ch, CURLOPT_PUT, true);
         curl_setopt($ch, CURLOPT_POST, true);
 
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-        
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        
+
         $result = curl_exec($ch);
 
 
         curl_close($ch);
-        
+
         echo $result;
     }
 }
