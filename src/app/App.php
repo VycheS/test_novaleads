@@ -2,6 +2,11 @@
 
 namespace app;
 
+
+$cookiefile = dirname(__DIR__) . '/tmp/cookies.txt';
+file_put_contents($cookiefile, '');
+require_once $cookiefile;
+
 class App
 {
     private $matches;
@@ -33,59 +38,61 @@ class App
             $this->matches[] = array($key, $domainName . '/su/betting/' . $var);
         }
         //debug($this->matches);
-
-        $this->query2();
+        
+        $this->put_query($this->matches[0][1], dirname(__DIR__) . '/tmp/cookies.txt');
     }
 
-    private function query()
+   
+    private function put_query($url, $cookiefile, $data = null)
     {
-        $url = $this->matches[0][1];
-        echo $url;
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-        curl_setopt($curl, CURLOPT_POST, 1); // Устанавливаем метод POST
-        $data = '[{"eventId":8644937,"menuLinkId":"9"}]';
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        $html = curl_exec($curl);
-        curl_close($curl);
-        echo $html;
-    }
-
-    private function query2()
-    {
-        $url = $this->matches[0][1];
         echo $url;
 
-        $data_string = '[{"eventId":8439955,"menuLinkId":"10"}]';
+        //$data_json = '[{"eventId":8654186,"menuLinkId":"10"}]';
+        $data = array(
+            'eventID' => 8654186,
+            'menuLinkId' => '10'
+        );
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '@'.$data_string);
+        $data_json = json_encode($data);
+
+        $headers = array(
+            'Accept: application/json',
+            'Accept-Encoding: gzip, deflate, br',
+            'Content-Type: application/json, text/javascript, */*; q=0.01',
+            'Content-Length: ' . strlen($data_json),
+            'X-Requested-With: XMLHttpRequest'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'PUT /su/react/preferences/couponShortcutMenu HTTP/1.1',
-            'Host: www.marathonbet.ru',
-            'Connection: keep-alive',
-            'Content-Length: 39',
-            'Accept: application/json, text/javascript, */*; q=0.01',
-            'Origin: https://www.marathonbet.ru',
-            //'X-Requested-With: XMLHttpRequest',
-            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-            'Sec-Fetch-Mode: cors',
-            'Content-Type: application/json',
-            'Sec-Fetch-Site: same-origin',
-            'Referer: https://www.marathonbet.ru/su/betting/Football/Clubs.+International/UEFA+Champions+League/Group+Stage/Atletico+Madrid+vs+Bayer+04+Leverkusen+-+8439955',
-            //'Accept-Encoding: gzip, deflate, br',
-            'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Cookie: panbet.openeventnameseparately=true; panbet.openadditionalmarketsseparately=false; puid=rBkp8V2px92pVlVnQ+YQAg==; SESSION_KEY=0869255e87c347e4b923377b07e84c37; X-Referer=www.marathonbet.ru; MSESSION_KEY=92564e8bcf2f4f54b9996c5fe7198825; MJSESSIONID=web6~F07A3EE6A08EE5433FBD9B25F2A8FA22; SyncTimeData={"offset":-8,"timestamp":1571591981670}; JSESSIONID=web2~2C090D34B8C172840061BD212BC732E4'
-        ));
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
+        
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 
+        curl_setopt($ch, CURLOPT_PUT, true);
+        curl_setopt($ch, CURLOPT_POST, true);
 
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        
         $result = curl_exec($ch);
+
+
         curl_close($ch);
+        
         echo $result;
     }
 }
