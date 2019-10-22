@@ -46,8 +46,7 @@ class App
     private function put_query($url, $cookiefile, $data = null)
     {
         echo $url;
-
-        $data_json = '[{"eventID":8654186,"menuLinkId":"10"}]';
+        $data_json = '[{".eventID":'.substr($url, -7).',"menuLinkId":"10"}]';
 
         // $data = array([
         //     'eventID' => '8654186',
@@ -70,6 +69,13 @@ class App
 
         ];
 
+        $tmp_ch = curl_init();
+        curl_setopt($tmp_ch, CURLOPT_COOKIEJAR, $cookiefile);
+        curl_setopt($tmp_ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
+        curl_setopt($tmp_ch, CURLOPT_URL, $url);
+        curl_exec($tmp_ch);
+        curl_close($tmp_ch);
+        //---------------------------------------------------------------------------------------
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -88,9 +94,9 @@ class App
         curl_setopt($ch, CURLOPT_REFERER, $url);
 
         curl_setopt($ch, CURLOPT_PUT, true);
-        curl_setopt($ch, CURLOPT_POST, true);
+        //curl_setopt($ch, CURLOPT_POST, true);
 
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
