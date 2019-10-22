@@ -46,14 +46,14 @@ class App
     private function put_query($url, $cookiefile, $data = null)
     {
         echo $url;
-        $data_json = '[{".eventID":'.substr($url, -7).',"menuLinkId":"10"}]';
+        //$data_json = '[{".eventID":'.substr($url, -7).',"menuLinkId":"10"}]';
 
-        // $data = array([
-        //     'eventID' => '8654186',
-        //     'menuLinkId' => '10'
-        // ]);
+        $data = array([
+            'eventID' => substr($url, -7),
+            'menuLinkId' => '10'
+        ]);
 
-        // $data_json = json_encode($data);
+        $data_json = json_encode($data);
 
         $headers = [
             'Accept: application/json, text/javascript, */*; q=0.01',
@@ -77,14 +77,14 @@ class App
         curl_close($tmp_ch);
         //---------------------------------------------------------------------------------------
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_URL, 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
+        //curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
         
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -94,16 +94,15 @@ class App
         curl_setopt($ch, CURLOPT_REFERER, $url);
 
         curl_setopt($ch, CURLOPT_PUT, true);
-        //curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POST, true);
 
-        //curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 
         $result = curl_exec($ch);
-
-
+        
         curl_close($ch);
 
         echo $result;
