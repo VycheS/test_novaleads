@@ -1,0 +1,4 @@
+#folder logs apache and php
+log/
+#temporary files
+tmp/
