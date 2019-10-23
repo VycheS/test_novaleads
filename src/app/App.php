@@ -4,8 +4,6 @@ namespace app;
 
 
 $cookiefile = dirname(__DIR__) . '/tmp/cookies.txt';
-file_put_contents($cookiefile, '');
-require_once $cookiefile;
 
 class App
 {
@@ -43,7 +41,7 @@ class App
     }
 
 
-    private function put_query($url, $cookiefile, $data = null)
+    private function put_query($url, $cookiefile, $data = null, $referer = 'https://www.google.ru/')
     {
         echo $url;
         //$data_json = '[{".eventID":'.substr($url, -7).',"menuLinkId":"10"}]';
@@ -70,9 +68,11 @@ class App
         ];
 
         $tmp_ch = curl_init();
+        curl_setopt($tmp_ch, CURLOPT_REFERER, $referer);
         curl_setopt($tmp_ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($tmp_ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
         curl_setopt($tmp_ch, CURLOPT_URL, $url);
+        curl_setopt($tmp_ch, CURLOPT_RETURNTRANSFER, true);
         curl_exec($tmp_ch);
         curl_close($tmp_ch);
         //---------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ class App
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
 
-        //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
         
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
