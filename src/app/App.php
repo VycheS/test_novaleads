@@ -69,6 +69,7 @@ class App
 
         $tmp_ch = curl_init();
         curl_setopt($tmp_ch, CURLOPT_REFERER, $referer);
+        curl_setopt($tmp_ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($tmp_ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($tmp_ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
         curl_setopt($tmp_ch, CURLOPT_URL, $url);
