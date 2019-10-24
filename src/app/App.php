@@ -37,75 +37,67 @@ class App
         }
         //debug($this->matches);
 
-        $this->put_query($this->matches[0][1], dirname(__DIR__) . '/tmp/cookies.txt');
+        $this->query($this->matches[0][1], dirname(__DIR__) . '/tmp/cookies.txt');
+        //file_get_contents_curl($this->matches[0][1]);
     }
 
-
-    private function put_query($url, $cookiefile, $data = null, $referer = 'https://www.google.ru/')
+    private function query($url, $cookiefile, $referer = 'https://www.google.ru/')
     {
         echo $url;
-        //$data_json = '[{".eventID":'.substr($url, -7).',"menuLinkId":"10"}]';
-
-        $data = array([
-            'eventID' => substr($url, -7),
-            'menuLinkId' => '10'
-        ]);
-
-        $data_json = json_encode($data);
-
-        $headers = [
-            'Accept: application/json, text/javascript, */*; q=0.01',
-            'Accept-Encoding: gzip, deflate, br',
-            'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_json),
-            'Host: www.marathonbet.ru',
-            'Origin: https://www.marathonbet.ru',
-            'Sec-Fetch-Mode: cors',
-            'Sec-Fetch-Site: same-origin',
-            'X-Requested-With: XMLHttpRequest'
-
-        ];
-
-        $tmp_ch = curl_init();
-        curl_setopt($tmp_ch, CURLOPT_REFERER, $referer);
-        curl_setopt($tmp_ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($tmp_ch, CURLOPT_COOKIEJAR, $cookiefile);
-        curl_setopt($tmp_ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
-        curl_setopt($tmp_ch, CURLOPT_URL, $url);
-        curl_setopt($tmp_ch, CURLOPT_RETURNTRANSFER, true);
-        curl_exec($tmp_ch);
-        curl_close($tmp_ch);
-        //---------------------------------------------------------------------------------------
+        //GET-------------------------------------------------------------
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
-        //curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
 
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
-        
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
+        
+        curl_exec($ch);
+        
+        //GET/-------------------------------------------------------------
+        
+        curl_setopt($ch, CURLOPT_URL, 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
+        
 
+        $data = array([
+            "eventID" => (int)substr($url, -7),
+            "menuLinkId" => "10"
+        ]);
+
+        $data_json = json_encode($data);
+        
         curl_setopt($ch, CURLOPT_PUT, true);
-        curl_setopt($ch, CURLOPT_POST, true);
+        //curl_setopt($ch, CURLOPT_POST, true);
 
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT /su/react/preferences/couponShortcutMenu HTTP/1.1');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 
-        $result = curl_exec($ch);
-        
-        curl_close($ch);
+        $header = [
+            
+            'Content-Type: application/json',
+            'Content-Length:' . strlen($data_json)
 
+        ];
+        echo '<br>'.'<h3>'.strlen($data_json).'</h3>';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+        //curl_setopt($ch, CURLOPT_REFERER, $url);
+        
+        $result = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        echo '<br>'.'<h1>'.$http_code.'</h1>';
         echo $result;
+        curl_close($ch);
+        
     }
 }
