@@ -44,7 +44,7 @@ class App
     private function query($url, $cookiefile, $referer = 'https://www.google.ru/')
     {
         echo $url;
-        //GET-------------------------------------------------------------
+        //111111111111111111111111111111111111111111111111111111----------------------------
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_REFERER, $referer);
@@ -58,11 +58,17 @@ class App
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
         
         curl_exec($ch);
+
+        curl_close($ch);
         
-        //GET/-------------------------------------------------------------
+        //22222222222222222222222222222222222222222222222--------------
+
+        $ch = curl_init();
         
         curl_setopt($ch, CURLOPT_URL, 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
         
@@ -73,8 +79,11 @@ class App
         ]);
 
         $data_json = json_encode($data);
-        
-        curl_setopt($ch, CURLOPT_PUT, true);
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+        //curl_setopt($ch, CURLOPT_PUT, true);
         //curl_setopt($ch, CURLOPT_POST, true);
 
         // curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
@@ -91,13 +100,36 @@ class App
         echo '<br>'.'<h3>'.strlen($data_json).'</h3>';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
-        //curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        
+        curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        echo '<h1>'.$http_code.'</h1>';
+        //echo $result;
+        curl_close($ch);
+        //33333333333333333333333333333333333333333333333333333333----------------------------
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
         
         $result = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        echo '<br>'.'<h1>'.$http_code.'</h1>';
-        echo $result;
+
         curl_close($ch);
+
+        echo $result;
         
     }
 }
