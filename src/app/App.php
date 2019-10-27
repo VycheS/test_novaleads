@@ -44,6 +44,7 @@ class App
     private function query($url, $cookiefile, $referer = 'https://www.google.ru/')
     {
         echo $url;
+        $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0';
         //111111111111111111111111111111111111111111111111111111----------------------------
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -60,18 +61,15 @@ class App
 
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
+        curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
         
         curl_exec($ch);
-
+        
         curl_close($ch);
         
         //22222222222222222222222222222222222222222222222--------------
 
         $ch = curl_init();
-        
-        curl_setopt($ch, CURLOPT_URL, 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
-        
 
         $data = array([
             "eventID" => (int)substr($url, -7),
@@ -80,31 +78,35 @@ class App
 
         $data_json = json_encode($data);
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-        //curl_setopt($ch, CURLOPT_PUT, true);
-        //curl_setopt($ch, CURLOPT_POST, true);
-
-        // curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT /su/react/preferences/couponShortcutMenu HTTP/1.1');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-
         $header = [
-            
+            'Host: www.marathonbet.ru',
+            'Accept: application/json, text/javascript, */*; q=0.01',
+            'Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding: gzip, deflate, br',
             'Content-Type: application/json',
-            'Content-Length:' . strlen($data_json)
-
+            'X-Requested-With: XMLHttpRequest',
+            'Content-Length: ' . strlen($data_json),
+            'Connection: keep-alive'
         ];
-        echo '<br>'.'<h3>'.strlen($data_json).'</h3>';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
-        curl_setopt($ch, CURLOPT_REFERER, $url);
+        $setopt_arr = [
+            CURLOPT_URL => 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_COOKIEJAR => $cookiefile,
+            CURLOPT_COOKIEFILE => $cookiefile,
+            CURLOPT_CUSTOMREQUEST => 'PUT /su/react/preferences/couponShortcutMenu',
+            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_POSTFIELDS => $data_json,
+            CURLOPT_REFERER => $url,
+            CURLOPT_USERAGENT => $user_agent,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+        ];
         
+        curl_setopt_array($ch, $setopt_arr);
+
         curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        echo '<h1>'.$http_code.'</h1>';
+        echo '<br>' . '<h1>' . $http_code . '</h1>';
         //echo $result;
         curl_close($ch);
         //33333333333333333333333333333333333333333333333333333333----------------------------
@@ -123,7 +125,7 @@ class App
 
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0');
+        curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
         
         $result = curl_exec($ch);
 
