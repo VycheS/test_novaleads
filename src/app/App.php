@@ -45,34 +45,32 @@ class App
     {
         echo $url;
         $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0';
-        //111111111111111111111111111111111111111111111111111111----------------------------
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_REFERER, $referer);
+        // //111111111111111111111111111111111111111111111111111111----------------------------
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, $url);
+        // curl_setopt($ch, CURLOPT_REFERER, $referer);
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
+        // curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        // //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
 
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        // curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 
-        curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-        
-        curl_exec($ch);
-        
-        curl_close($ch);
-        
+        // curl_exec($ch);
+
+        // curl_close($ch);
+
         //22222222222222222222222222222222222222222222222--------------
 
         $ch = curl_init();
 
         $data = array([
-            "eventID" => (int)substr($url, -7),
+            "eventID" => (int) substr($url, -7),
             "menuLinkId" => "10"
         ]);
 
@@ -86,27 +84,38 @@ class App
             'Content-Type: application/json',
             'X-Requested-With: XMLHttpRequest',
             'Content-Length: ' . strlen($data_json),
-            'Connection: keep-alive'
+            'Connection: keep-alive',
+            'Origin: https://www.marathonbet.ru',
+            'Pragma: no-cache',
+            'Cache-Control: no-cache'
         ];
 
         $setopt_arr = [
             CURLOPT_URL => 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu',
+            CURLOPT_HEADER => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_COOKIEJAR => $cookiefile,
-            CURLOPT_COOKIEFILE => $cookiefile,
-            CURLOPT_CUSTOMREQUEST => 'PUT /su/react/preferences/couponShortcutMenu',
+            //CURLOPT_COOKIEFILE => $cookiefile,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
             CURLOPT_HTTPHEADER => $header,
-            CURLOPT_POSTFIELDS => $data_json,
+            CURLOPT_POST => true,
+            //CURLOPT_POSTFIELDS => $data_json,
             CURLOPT_REFERER => $url,
             CURLOPT_USERAGENT => $user_agent,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLINFO_HEADER_OUT => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC
         ];
-        
+
         curl_setopt_array($ch, $setopt_arr);
 
         curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         echo '<br>' . '<h1>' . $http_code . '</h1>';
+        debug(curl_getinfo($ch));
         //echo $result;
         curl_close($ch);
         //33333333333333333333333333333333333333333333333333333333----------------------------
@@ -114,7 +123,7 @@ class App
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_REFERER, $referer);
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+        //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
 
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -126,12 +135,11 @@ class App
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-        
+
         $result = curl_exec($ch);
 
         curl_close($ch);
 
         echo $result;
-        
     }
 }
