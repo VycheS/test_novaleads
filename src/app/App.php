@@ -115,7 +115,7 @@ class App
         curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         echo '<br>' . '<h1>' . $http_code . '</h1>';
-        debug(curl_getinfo($ch));
+        debug(curl_getinfo($ch, CURLINFO_HEADER_OUT));
         //echo $result;
         curl_close($ch);
         //33333333333333333333333333333333333333333333333333333333----------------------------
