@@ -11458,6 +11458,11 @@ p.accepted-currency {
  width:38px;
  height:40px
 }
+#footer .casino-footer-main em.sprite-zaragoza {
+ background-position:-196px -218px;
+ width:29px;
+ height:36px
+}
 #footer .casino-footer-main em.sprite-girona {
  background-position:-109px -2px;
  width:34px;
@@ -11530,7 +11535,7 @@ p.accepted-currency {
 }
 #footer .casino-footer-main em.sprite-monetix_wallet {
  background-position:-33px -216px;
- width:86px;
+ width:85px;
  height:23px
 }
 #footer .casino-footer-main em.sprite-antille-phone-license-content {

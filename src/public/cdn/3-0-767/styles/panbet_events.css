@@ -2654,6 +2654,12 @@ table.outright-yes-no {
  white-space:nowrap;
  display:inline-block
 }
+.foot-market .simple-price .middle-simple {
+ margin-right:auto;
+ width:30px;
+ padding-left:5px;
+ padding-right:5px
+}
 .foot-market .simple-price .right-simple {
  float:right;
  text-align:right;
