@@ -3,11 +3,20 @@ version: '3'
 services:
   web:
     image: php:7.2-apache
-    build: ./dockerfiles/php
+
+    build: #./dockerfiles/php
+      context: ./dockerfiles
+      dockerfile: Dockerfile-php
+      
     ports:
       - 80:80
       - 443:443
-    network_mode: "host"
+
+    # network_mode: host
+      
     volumes:
       - ./src:/var/www/html
       - ./log/apache2:/var/log/apache2
+
+      
+
