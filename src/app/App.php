@@ -14,6 +14,16 @@ class App
     }
 
     public function start(string $domainName, string $route, string $params)
+    {   
+        //$this->parseAllMatches($domainName, $route, $params);
+        
+        //debug($this->matches);
+
+        $this->query('https://www.marathonbet.ru/su/betting/Football/Internationals/FIFA+World+Cup/2022/Qualification/AFC/2nd+Round/Group+Stage/Malaysia+vs+Thailand+-+8300967', dirname(__DIR__) . '/tmp/cookies.txt');
+        //file_get_contents_curl($this->matches[0][1]);
+    }
+
+    private function parseAllMatches(string $domainName, string $route, string $params)
     {
         $page  = '&page=';
         $action = '&pageAction=getPage';
@@ -35,38 +45,14 @@ class App
             $var = parse($cell, 'data-event-path=\"', '\">');
             $this->matches[] = array($key, $domainName . '/su/betting/' . $var);
         }
-        //debug($this->matches);
-
-        $this->query($this->matches[0][1], dirname(__DIR__) . '/tmp/cookies.txt');
-        //file_get_contents_curl($this->matches[0][1]);
     }
 
     private function query($url, $cookiefile, $referer = 'https://www.google.ru/')
     {
         echo $url;
         $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0';
-        // //111111111111111111111111111111111111111111111111111111----------------------------
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_REFERER, $referer);
-
-        // curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
-        // //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
-
-        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        // curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-
-        // curl_exec($ch);
-
-        // curl_close($ch);
-
-        $this->put_query($url, $cookiefile);
-
+        
+        $this->put_query_curl($url, $cookiefile);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -92,67 +78,16 @@ class App
         echo $result;
     }
 
-    private function put_query($url, $cookiefile, $referer = 'https://www.google.ru/', $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0')
+    private function put_query_curl($url, $cookiefile, $referer = 'https://www.google.ru/', $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0')
     {
-        // $ch = curl_init();
+        $url = 'https://www.marathonbet.ru/su/betting/Football/Internationals/FIFA+World+Cup/2022/Qualification/AFC/2nd+Round/Group+Stage/Malaysia+vs+Thailand+-+8300967';
 
         $data = array([
             "eventID" => (int) substr($url, -7),
             "menuLinkId" => "10"
         ]);
-
         
-
         $data_json = json_encode($data);
-
-        // echo $data_json;
-
-        $header = [
-            'Host: www.marathonbet.ru',
-            'Accept: application/json, text/javascript, */*; q=0.01',
-            'Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding: gzip, deflate, br',
-            'Content-Type: application/json',
-            'X-Requested-With: XMLHttpRequest',
-            'Connection: keep-alive',
-            'Origin: https://www.marathonbet.ru',
-            'Pragma: no-cache',
-            'Cache-Control: no-cache'
-        ];
-
-        $this->put_query_curl($data_json, $cookiefile);
-
-        // $setopt_arr = [
-        //     CURLOPT_URL => 'https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu',
-        //     CURLOPT_HEADER => true,
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_COOKIEJAR => $cookiefile,
-        //     CURLOPT_COOKIEFILE => $cookiefile,
-        //     CURLOPT_CUSTOMREQUEST => 'PUT',
-        //     CURLOPT_HTTPHEADER => $header,
-        //     CURLOPT_POST => true,
-        //     CURLOPT_POSTFIELDS => $data_json,
-        //     CURLOPT_REFERER => $url,
-        //     CURLOPT_USERAGENT => $user_agent,
-        //     CURLOPT_SSL_VERIFYPEER => false,
-        //     CURLOPT_SSL_VERIFYHOST => false,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLINFO_HEADER_OUT => true,
-        //     CURLOPT_CONNECTTIMEOUT => 10
-        // ];
-
-        // curl_setopt_array($ch, $setopt_arr);
-
-        // curl_exec($ch);
-        // $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // echo '<br>' . '<h1>' . $http_code . '</h1>';
-        // debug(curl_getinfo($ch, CURLINFO_HEADER_OUT));
-        // //echo $result;
-        // curl_close($ch);
-    }
-
-    private function put_query_curl($query, $cookiefile)
-    {
 
         $header = [
             'Host: www.marathonbet.ru',
@@ -170,11 +105,9 @@ class App
         ];
         // Start curl
         $ch = curl_init('https://www.marathonbet.ru/su/react/preferences/couponShortcutMenu');
-        // URL for curl
-        //$url = "http://localhost/";
-
+        
         // Clean up string
-        $putString = stripslashes($query);
+        $putString = stripslashes($data_json);
         // Put string into a temporary file
         $putData = tmpfile();
         // Write the string to the temporary file
@@ -199,6 +132,12 @@ class App
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // curl_setopt($ch, CURLOPT_PROXY, '172.0.0.1:8080');
+        // curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 
         curl_exec($ch);
         //echo $output;
