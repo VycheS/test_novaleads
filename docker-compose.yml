@@ -4,8 +4,6 @@ services:
   web:
     image: php:7.2-apache
     build: ./dockerfiles/php
-      # context: ./dockerfiles
-      # dockerfile: Dockerfile-php
     ports:
       - 80:80
       - 443:443
@@ -13,9 +11,10 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./log/apache2:/var/log/apache2
+    # container_name: myweb
 
   # mitmproxy:
-  #   build: ./mitmproxy
+  #   build: ./Dockerfiles/mitmproxy
   #   ports:
   #       - "8080:8080"
   #   expose:
