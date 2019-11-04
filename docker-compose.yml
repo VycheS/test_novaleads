@@ -3,20 +3,26 @@ version: '3'
 services:
   web:
     image: php:7.2-apache
-
-    build: #./dockerfiles/php
-      context: ./dockerfiles
-      dockerfile: Dockerfile-php
-      
+    build: ./dockerfiles/php
+      # context: ./dockerfiles
+      # dockerfile: Dockerfile-php
     ports:
       - 80:80
       - 443:443
-
     #network_mode: host
-      
     volumes:
       - ./src:/var/www/html
       - ./log/apache2:/var/log/apache2
+
+  # mitmproxy:
+  #   build: ./mitmproxy
+  #   ports:
+  #       - "8080:8080"
+  #   expose:
+  #       - "8080"
+  #   stdin_open: true
+  #   tty: true
+  #   container_name: mitmproxy-container
 
       
 
