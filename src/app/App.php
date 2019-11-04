@@ -136,7 +136,7 @@ class App
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        // curl_setopt($ch, CURLOPT_PROXY, '172.0.0.1:8080');
+        // curl_setopt($ch, CURLOPT_PROXY, 'localhost:8079');
         // curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 
         curl_exec($ch);
